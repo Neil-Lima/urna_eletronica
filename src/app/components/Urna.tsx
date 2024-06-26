@@ -73,6 +73,7 @@ const Urna: React.FC = () => {
   const [num1, setNum1] = useState<string>('');
   const [num2, setNum2] = useState<string>('');
   const [votedCandidate, setVotedCandidate] = useState<Candidate | null>(null);
+  const [votingState, setVotingState] = useState<'ongoing' | 'blank' | 'finished'>('ongoing');
 
   const handleButtonClick = (value: number) => {
     if (num1 === '') {
@@ -80,11 +81,20 @@ const Urna: React.FC = () => {
     } else if (num2 === '') {
       setNum2(value.toString());
     }
+    // Mostrar dados do candidato ao digitar o número
+    const candidateNumber = parseInt(`${num1}${num2}${value}`);
+    const candidate = candidates[candidateNumber];
+    if (candidate) {
+      setVotedCandidate(candidate);
+    } else {
+      setVotedCandidate({ name: 'Voto Nulo', image: '' });
+    }
   };
 
   const handleBranco = () => {
     setNum1('');
     setNum2('');
+    setVotingState('blank');
     setVotedCandidate({ name: 'Branco', image: '' });
   };
 
@@ -92,16 +102,11 @@ const Urna: React.FC = () => {
     setNum1('');
     setNum2('');
     setVotedCandidate(null);
+    setVotingState('ongoing');
   };
 
   const handleConfirmar = () => {
-    const candidateNumber = parseInt(`${num1}${num2}`);
-    const candidate = candidates[candidateNumber];
-    if (candidate) {
-      setVotedCandidate(candidate);
-    } else {
-      setVotedCandidate({ name: 'Voto Nulo', image: '' });
-    }
+    setVotingState('finished');
   };
 
   return (
@@ -122,28 +127,40 @@ const Urna: React.FC = () => {
                     </Col>
                   </Row>
                 </Form>
-                {votedCandidate && votedCandidate.image && (
+                {votedCandidate && votedCandidate.image && votingState === 'ongoing' && (
                   <Row style={{ marginTop: '20px' }}>
-  <Col xs={6} lg={6} className="d-flex align-items-center justify-content-center">
-    <img
-      src={votedCandidate.image}
-      style={{ width: '70%', height: '80%', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}
-      alt="candidato"
-    />
-  </Col>
-  <Col xs={6} lg={6}>
-    <div style={{ paddingLeft: '10px' }}>
-      <h2>Você votou em:</h2>
-      <p style={{ fontSize: '20px' }}><strong>Nome:</strong> {votedCandidate.name}</p>
-      {votedCandidate.idade && <p style={{ fontSize: '20px' }}><strong>Idade:</strong> {votedCandidate.idade}</p>}
-      {votedCandidate.partido && <p style={{ fontSize: '20px' }}><strong>Partido:</strong> {votedCandidate.partido}</p>}
-      {votedCandidate.numero && <p style={{ fontSize: '20px' }}><strong>Número:</strong> {votedCandidate.numero}</p>}
-    </div>
-  </Col>
-</Row>
-
-)}
-
+                    <Col xs={6} lg={6} className="d-flex align-items-center justify-content-center">
+                      <img
+                        src={votedCandidate.image}
+                        style={{ width: '70%', height: '80%', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}
+                        alt="candidato"
+                      />
+                    </Col>
+                    <Col xs={6} lg={6}>
+                      <div style={{ paddingLeft: '10px' }}>
+                        <h2>Você votou em:</h2>
+                        <p style={{ fontSize: '20px' }}><strong>Nome:</strong> {votedCandidate.name}</p>
+                        {votedCandidate.idade && <p style={{ fontSize: '20px' }}><strong>Idade:</strong> {votedCandidate.idade}</p>}
+                        {votedCandidate.partido && <p style={{ fontSize: '20px' }}><strong>Partido:</strong> {votedCandidate.partido}</p>}
+                        {votedCandidate.numero && <p style={{ fontSize: '20px' }}><strong>Número:</strong> {votedCandidate.numero}</p>}
+                      </div>
+                    </Col>
+                  </Row>
+                )}
+                {votingState === 'blank' && (
+                  <Row style={{ marginTop: '20px' }}>
+                    <Col xs={12}>
+                      <h1 style={{ textAlign: 'center' }}>Você votou em BRANCO</h1>
+                    </Col>
+                  </Row>
+                )}
+                {votingState === 'finished' && (
+                  <Row style={{ marginTop: '20px' }}>
+                    <Col xs={12}>
+                      <h1 style={{ textAlign: 'center' }}>FIM</h1>
+                    </Col>
+                  </Row>
+                )}
               </div>
             </Col>
             <Col xs={12} lg={5} style={{ background: '#4c5156', borderRadius: '15px', padding: '20px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.3)' }}>
