@@ -120,10 +120,10 @@ const Urna: React.FC = () => {
                 <Form>
                   <Row>
                     <Col xs={6} md={6}>
-                      <Form.Control type="text" value={num1} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
+                      <Form.Control type="text" value={num1} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)', fontSize: '36px' }} />
                     </Col>
                     <Col xs={6} md={6}>
-                      <Form.Control type="text" value={num2} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
+                      <Form.Control type="text" value={num2} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)', fontSize: '36px' }} />
                     </Col>
                   </Row>
                 </Form>

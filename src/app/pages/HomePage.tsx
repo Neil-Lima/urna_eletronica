@@ -5,7 +5,7 @@ import TabelaCandidatos from '../components/TabelaCandidatos'
 export default function HomePage() {
   return (
     <div>
-      <TabelaCandidatos/>
+      <TabelaCandidatos/><br /><br />
       <Urna/>
     </div>
   )
