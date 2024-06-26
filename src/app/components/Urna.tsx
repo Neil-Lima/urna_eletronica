@@ -68,9 +68,7 @@ const candidates: { [key: number]: Candidate } = {
   }
 };
 
-interface UrnaProps {}
-
-const Urna: React.FC<UrnaProps> = () => {
+const Urna: React.FC = () => {
   const buttonValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const [num1, setNum1] = useState<string>('');
   const [num2, setNum2] = useState<string>('');
@@ -107,48 +105,53 @@ const Urna: React.FC<UrnaProps> = () => {
   };
 
   return (
-    <Container className="shadow-lg" style={{ padding: '77px' }}>
-      <Card className="shadow-lg" style={{ padding: '40px', background: 'rgb(190,187,185)', borderRadius: '15px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
+    <Container className="shadow-lg" style={{ padding: '20px', maxWidth: '1200px' }}>
+      <Card className="shadow-lg" style={{ padding: '20px', background: 'rgb(190,187,185)', borderRadius: '15px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
         <Card.Body>
           <Row>
-            <Col className="d-xxl-flex align-items-xxl-center">
-              <div style={{ margin: '0px', height: '450px', width: '100%', background: 'var(--bs-gray-100)', padding: '13px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }}>
+            <Col xs={12} lg={7}>
+              <div style={{ margin: '0px', height: '450px', background: 'var(--bs-gray-100)', padding: '13px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }}>
                 <h4>Digite o número do seu candidato:</h4>
                 <Form>
                   <Row>
-                    <Col className="col-xxl-2">
+                    <Col xs={6} md={6}>
                       <Form.Control type="text" value={num1} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
                     </Col>
-                    <Col className="col-xxl-2">
+                    <Col xs={6} md={6}>
                       <Form.Control type="text" value={num2} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
                     </Col>
                   </Row>
                 </Form>
                 {votedCandidate && votedCandidate.image && (
-                <Row style={{ marginTop: '20px' }}>
-                <Col className="col-xxl-6">
-                  <img src={votedCandidate.image} style={{ width: '70%', height: '90%', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }} alt="candidato" />
-                </Col>
-                <Col className="col-xxl-6">
-                  <div style={{ paddingLeft: '10px' }}>
-                    <h2 >Você votou em:</h2>
-                    <p style={{ fontSize: '20px' }}><strong>Nome:</strong> {votedCandidate.name}</p>
-                    {votedCandidate.idade && <p style={{ fontSize: '20px' }}><strong>Idade:</strong> {votedCandidate.idade}</p>}
-                    {votedCandidate.partido && <p style={{ fontSize: '20px' }}><strong>Partido:</strong> {votedCandidate.partido}</p>}
-                    {votedCandidate.numero && <p style={{ fontSize: '20px' }}><strong>Número:</strong> {votedCandidate.numero}</p>}
-                  </div>
-                </Col>
-              </Row>
-              
-                )}
+                  <Row style={{ marginTop: '20px' }}>
+  <Col xs={6} lg={6} className="d-flex align-items-center justify-content-center">
+    <img
+      src={votedCandidate.image}
+      style={{ width: '70%', height: '80%', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}
+      alt="candidato"
+    />
+  </Col>
+  <Col xs={6} lg={6}>
+    <div style={{ paddingLeft: '10px' }}>
+      <h2>Você votou em:</h2>
+      <p style={{ fontSize: '20px' }}><strong>Nome:</strong> {votedCandidate.name}</p>
+      {votedCandidate.idade && <p style={{ fontSize: '20px' }}><strong>Idade:</strong> {votedCandidate.idade}</p>}
+      {votedCandidate.partido && <p style={{ fontSize: '20px' }}><strong>Partido:</strong> {votedCandidate.partido}</p>}
+      {votedCandidate.numero && <p style={{ fontSize: '20px' }}><strong>Número:</strong> {votedCandidate.numero}</p>}
+    </div>
+  </Col>
+</Row>
+
+)}
+
               </div>
             </Col>
-            <Col className="col-xxl-5" style={{ background: '#4c5156', borderRadius: '15px', padding: '20px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.3)' }}>
+            <Col xs={12} lg={5} style={{ background: '#4c5156', borderRadius: '15px', padding: '20px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.3)' }}>
               {buttonValues.map((value, index) => (
                 index % 3 === 0 && (
-                  <Row key={index} style={{ paddingBottom: '20px' }}>
+                  <Row key={index} style={{ paddingBottom: '10px' }}>
                     {buttonValues.slice(index, index + 3).map((val) => (
-                      <Col key={val}>
+                      <Col key={val} xs={4} md={4} style={{ marginBottom: '10px' }}>
                         <Button
                           className="btn-primary"
                           style={{ width: '100%', background: 'var(--bs-gray-800)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
@@ -161,8 +164,8 @@ const Urna: React.FC<UrnaProps> = () => {
                   </Row>
                 )
               ))}
-              <Row style={{ paddingBottom: '20px' }}>
-                <Col>
+              <Row style={{ marginTop: '10px' }}>
+                <Col xs={4} md={4} style={{ marginBottom: '10px' }}>
                   <Button
                     className="btn-primary"
                     style={{ width: '100%', background: 'var(--bs-gray-100)', padding: '12px', color: 'var(--bs-gray-900)', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
@@ -171,7 +174,7 @@ const Urna: React.FC<UrnaProps> = () => {
                     Branco
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={4} md={4} style={{ marginBottom: '10px' }}>
                   <Button
                     className="btn-primary"
                     style={{ width: '100%', background: 'var(--bs-red)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
@@ -180,7 +183,7 @@ const Urna: React.FC<UrnaProps> = () => {
                     Corrigir
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={4} md={4} style={{ marginBottom: '10px' }}>
                   <Button
                     className="btn-primary"
                     style={{ width: '100%', background: 'var(--bs-green)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
