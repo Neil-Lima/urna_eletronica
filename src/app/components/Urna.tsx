@@ -12,16 +12,16 @@ interface Candidate {
 const candidates: { [key: number]: Candidate } = {
   22: {
     name: 'Jair Bolsonaro',
-    image: 'https://divulgacandcontas.tse.jus.br/candidaturas/oficial/2018/BR/BR/2022802018/280000614517/foto_1534215592223.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Jair_Bolsonaro_2021_%28cropped%29.jpg/451px-Jair_Bolsonaro_2021_%28cropped%29.jpg',
     idade: 66,
-    partido: 'PSL',
+    partido: 'PL',
     numero: 22
   },
   14: {
     name: 'Padre Kelmon',
-    image: 'https://s2.glbimg.com/Ne02PrK21XiqyKsA5ISoNrA_GEE=/184x0:661x494/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2022/d/Z/goAw3GTRy4mrm2t7sJfQ/whatsapp-image-2022-09-24-at-18.32.56.jpeg',
+    image: 'https://horacampinas.com.br/wp-content/uploads/2022/09/Padre_Kelmon_presidente.jpeg',
     idade: 45,
-    partido: 'ABC',
+    partido: 'PTB',
     numero: 14
   },
   30: {
@@ -33,7 +33,7 @@ const candidates: { [key: number]: Candidate } = {
   },
   13: {
     name: 'Lula da Silva',
-    image: 'https://divulgacandcontas.tse.jus.br/candidaturas/oficial/2018/BR/BR/2022802018/280000625869/foto_1534363925445.jpg',
+    image: 'https://f.i.uol.com.br/fotografia/2022/08/10/166014378462f3c8a8c16e9_1660143784_3x2_md.jpg',
     idade: 75,
     partido: 'PT',
     numero: 13
@@ -51,6 +51,20 @@ const candidates: { [key: number]: Candidate } = {
     idade: 51,
     partido: 'MDB',
     numero: 12
+  },
+  80: {
+    name: 'Léo Péricles',
+    image: 'https://horacampinas.com.br/wp-content/uploads/2022/09/Leo_Pericles_presidente.jpg',
+    idade: 40,
+    partido: 'MDB',
+    numero: 80
+  },
+  44: {
+    name: 'Soraya Thronicke',
+    image: 'https://horacampinas.com.br/wp-content/uploads/2022/09/Soraya_presidente.jpg',
+    idade: 40,
+    partido: 'MDB',
+    numero: 44
   }
 };
 
@@ -113,7 +127,7 @@ const Urna: React.FC<UrnaProps> = () => {
                 {votedCandidate && votedCandidate.image && (
                 <Row style={{ marginTop: '20px' }}>
                 <Col className="col-xxl-6">
-                  <img src={votedCandidate.image} style={{ width: '80%', height: '90%', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }} alt="candidato" />
+                  <img src={votedCandidate.image} style={{ width: '70%', height: '90%', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }} alt="candidato" />
                 </Col>
                 <Col className="col-xxl-6">
                   <div style={{ paddingLeft: '10px' }}>
