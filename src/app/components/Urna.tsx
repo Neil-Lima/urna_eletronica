@@ -1,10 +1,96 @@
-'use client';
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Card, Form, Row, Col, Button } from 'react-bootstrap';
 
-export default function Urna() {
-  const buttonValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+interface Candidate {
+  name: string;
+  image: string;
+  idade?: number; // idade é opcional para evitar erro de tipo
+  partido?: string;
+  numero?: number;
+}
+
+const candidates: { [key: number]: Candidate } = {
+  22: {
+    name: 'Jair Bolsonaro',
+    image: 'https://divulgacandcontas.tse.jus.br/candidaturas/oficial/2018/BR/BR/2022802018/280000614517/foto_1534215592223.jpg',
+    idade: 66,
+    partido: 'PSL',
+    numero: 22
+  },
+  14: {
+    name: 'Padre Kelmon',
+    image: 'https://s2.glbimg.com/Ne02PrK21XiqyKsA5ISoNrA_GEE=/184x0:661x494/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2022/d/Z/goAw3GTRy4mrm2t7sJfQ/whatsapp-image-2022-09-24-at-18.32.56.jpeg',
+    idade: 45,
+    partido: 'ABC',
+    numero: 14
+  },
+  30: {
+    name: 'Felipe D\'Avila',
+    image: 'https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcQvT6xqf5XBleRGNOCxmSCdIB7F3_hB-qMShPy9-j4JsO4tlpvX2F4QDOXf4GOlIKto',
+    idade: 50,
+    partido: 'RFDS',
+    numero: 30
+  },
+  13: {
+    name: 'Lula da Silva',
+    image: 'https://divulgacandcontas.tse.jus.br/candidaturas/oficial/2018/BR/BR/2022802018/280000625869/foto_1534363925445.jpg',
+    idade: 75,
+    partido: 'PT',
+    numero: 13
+  },
+  17: {
+    name: 'Ciro Gomes',
+    image: 'https://divulgacandcontas.tse.jus.br/candidaturas/oficial/2022/BR/BR/544/candidatos/882713/foto.jpg',
+    idade: 63,
+    partido: 'PDT',
+    numero: 17
+  },
+  12: {
+    name: 'Simone Tebet',
+    image: 'https://divulgacandcontas.tse.jus.br/candidaturas/oficial/2022/BR/BR/544/candidatos/899992/foto.jpg',
+    idade: 51,
+    partido: 'MDB',
+    numero: 12
+  }
+};
+
+interface UrnaProps {}
+
+const Urna: React.FC<UrnaProps> = () => {
+  const buttonValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const [num1, setNum1] = useState<string>('');
+  const [num2, setNum2] = useState<string>('');
+  const [votedCandidate, setVotedCandidate] = useState<Candidate | null>(null);
+
+  const handleButtonClick = (value: number) => {
+    if (num1 === '') {
+      setNum1(value.toString());
+    } else if (num2 === '') {
+      setNum2(value.toString());
+    }
+  };
+
+  const handleBranco = () => {
+    setNum1('');
+    setNum2('');
+    setVotedCandidate({ name: 'Branco', image: '' });
+  };
+
+  const handleCorrigir = () => {
+    setNum1('');
+    setNum2('');
+    setVotedCandidate(null);
+  };
+
+  const handleConfirmar = () => {
+    const candidateNumber = parseInt(`${num1}${num2}`);
+    const candidate = candidates[candidateNumber];
+    if (candidate) {
+      setVotedCandidate(candidate);
+    } else {
+      setVotedCandidate({ name: 'Voto Nulo', image: '' });
+    }
+  };
 
   return (
     <Container className="shadow-lg" style={{ padding: '77px' }}>
@@ -12,20 +98,35 @@ export default function Urna() {
         <Card.Body>
           <Row>
             <Col className="d-xxl-flex align-items-xxl-center">
-              <div style={{ margin: '0px', height: 'auto', width: '100%', background: 'var(--bs-gray-100)', padding: '13px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }}>
+              <div style={{ margin: '0px', height: '450px', width: '100%', background: 'var(--bs-gray-100)', padding: '13px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }}>
                 <h4>Digite o número do seu candidato:</h4>
                 <Form>
                   <Row>
                     <Col className="col-xxl-2">
-                      <Form.Control type="text" style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
+                      <Form.Control type="text" value={num1} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
                     </Col>
                     <Col className="col-xxl-2">
-                      <Form.Control type="text" style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
+                      <Form.Control type="text" value={num2} readOnly style={{ height: '82px', borderRadius: '10px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }} />
                     </Col>
                   </Row>
                 </Form>
-                <h3>Você votou em : (nome candidato)</h3>
-                <img style={{ width: '40%', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }} alt="candidato" />
+                {votedCandidate && votedCandidate.image && (
+                <Row style={{ marginTop: '20px' }}>
+                <Col className="col-xxl-6">
+                  <img src={votedCandidate.image} style={{ width: '80%', height: '90%', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }} alt="candidato" />
+                </Col>
+                <Col className="col-xxl-6">
+                  <div style={{ paddingLeft: '10px' }}>
+                    <h2 >Você votou em:</h2>
+                    <p style={{ fontSize: '20px' }}><strong>Nome:</strong> {votedCandidate.name}</p>
+                    {votedCandidate.idade && <p style={{ fontSize: '20px' }}><strong>Idade:</strong> {votedCandidate.idade}</p>}
+                    {votedCandidate.partido && <p style={{ fontSize: '20px' }}><strong>Partido:</strong> {votedCandidate.partido}</p>}
+                    {votedCandidate.numero && <p style={{ fontSize: '20px' }}><strong>Número:</strong> {votedCandidate.numero}</p>}
+                  </div>
+                </Col>
+              </Row>
+              
+                )}
               </div>
             </Col>
             <Col className="col-xxl-5" style={{ background: '#4c5156', borderRadius: '15px', padding: '20px', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.3)' }}>
@@ -34,7 +135,11 @@ export default function Urna() {
                   <Row key={index} style={{ paddingBottom: '20px' }}>
                     {buttonValues.slice(index, index + 3).map((val) => (
                       <Col key={val}>
-                        <Button className="btn-primary" style={{ width: '100%', background: 'var(--bs-gray-800)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}>
+                        <Button
+                          className="btn-primary"
+                          style={{ width: '100%', background: 'var(--bs-gray-800)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
+                          onClick={() => handleButtonClick(val)}
+                        >
                           {val}
                         </Button>
                       </Col>
@@ -43,25 +148,30 @@ export default function Urna() {
                 )
               ))}
               <Row style={{ paddingBottom: '20px' }}>
-                <Col className="col-4">
-                  <Button className="btn-primary" style={{ width: '100%', background: 'var(--bs-gray-800)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}>
-                    0
-                  </Button>
-                </Col>
-              </Row>
-              <Row style={{ paddingBottom: '20px' }}>
                 <Col>
-                  <Button className="btn-primary" style={{ width: '100%', background: 'var(--bs-gray-100)', padding: '12px', color: 'var(--bs-gray-900)', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}>
+                  <Button
+                    className="btn-primary"
+                    style={{ width: '100%', background: 'var(--bs-gray-100)', padding: '12px', color: 'var(--bs-gray-900)', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
+                    onClick={handleBranco}
+                  >
                     Branco
                   </Button>
                 </Col>
                 <Col>
-                  <Button className="btn-primary" style={{ width: '100%', background: 'var(--bs-red)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}>
+                  <Button
+                    className="btn-primary"
+                    style={{ width: '100%', background: 'var(--bs-red)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
+                    onClick={handleCorrigir}
+                  >
                     Corrigir
                   </Button>
                 </Col>
                 <Col>
-                  <Button className="btn-primary" style={{ width: '100%', background: 'var(--bs-green)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}>
+                  <Button
+                    className="btn-primary"
+                    style={{ width: '100%', background: 'var(--bs-green)', padding: '12px', borderRadius: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', border: 'none' }}
+                    onClick={handleConfirmar}
+                  >
                     Confirmar
                   </Button>
                 </Col>
@@ -72,4 +182,6 @@ export default function Urna() {
       </Card>
     </Container>
   );
-}
+};
+
+export default Urna;
