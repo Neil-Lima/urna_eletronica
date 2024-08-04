@@ -111,6 +111,7 @@ const Urna: React.FC = () => {
 
   return (
     <Container className="shadow-lg" style={{ padding: '20px', maxWidth: '1200px' }}>
+     <h1>victor</h1>
       <Card className="shadow-lg" style={{ padding: '20px', background: 'rgb(190,187,185)', borderRadius: '15px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
         <Card.Body>
           <Row>
