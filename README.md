@@ -15,6 +15,7 @@ Desenvolvi esta Urna Eletrônica Digital como uma aplicação web moderna que si
 - **Visualização de Candidatos**: Exibição de foto e informações ao digitar o número
 - **Funcionalidades Completas**: Opções para votar em branco, corrigir e confirmar
 - **Tabela de Candidatos**: Listagem paginada com todos os candidatos disponíveis
+- **Contagem de Votos**: Sistema para registrar e totalizar os votos de cada candidato
 - **Layout Responsivo**: Design adaptado para todos os tamanhos de tela
 - **Navegação Simples e Intuitiva**: Experiência de usuário fluida e sem complicações
 
@@ -42,13 +43,20 @@ Desenvolvi esta Urna Eletrônica Digital como uma aplicação web moderna que si
 - Exibição instantânea da foto e informações do candidato ao digitar o número
 - Opções para votar em branco, corrigir a digitação ou confirmar o voto
 - Feedback visual após confirmação do voto
+- Registro e contabilização dos votos em um sistema interno
 
 ### Tabela de Candidatos
-- Listagem completa dos candidatos disponíveis
+- Listagem completa dos candidatos disponíveis (15+ candidatos)
 - Sistema de paginação para fácil navegação
 - Exibição de foto, nome, idade, número e partido de cada candidato
 - Interface organizada em formato tabular
 - Navegação intuitiva entre páginas de candidatos
+
+### Sistema de Resultados
+- Contagem em tempo real dos votos recebidos
+- Totalização separada para votos válidos, brancos e nulos
+- Possibilidade de visualizar estatísticas dos resultados
+- Interface clara para acompanhamento do processo eleitoral
 
 ## 🔧 Instalação e Configuração
 
@@ -77,6 +85,7 @@ A aplicação estará disponível em `http://localhost:3000`
    - **Confirmar**: Para finalizar o voto
 5. Após confirmar, a urna exibirá "FIM" indicando que o voto foi computado
 6. Na tabela abaixo, você pode consultar todos os candidatos disponíveis
+7. Os resultados são armazenados e podem ser consultados após a votação
 
 ## 🎯 Casos de Uso
 
@@ -84,6 +93,7 @@ A aplicação estará disponível em `http://localhost:3000`
 - **Treinamento de Mesários**: Familiarização com o sistema de votação
 - **Demonstrações Públicas**: Apresentação do funcionamento das urnas
 - **Eleições Institucionais**: Adaptável para votações em organizações, escolas e empresas
+- **Análise de Resultados**: Visualização clara dos dados e estatísticas de votação
 
 ## 📱 Responsividade
 
@@ -92,6 +102,14 @@ A aplicação foi desenvolvida com foco na experiência do usuário em diferente
 - **Desktop**: Layout completo com visualização lado a lado
 - **Tablet**: Adaptação para telas médias mantendo a usabilidade
 - **Mobile**: Reorganização vertical dos elementos para fácil acesso
+
+## 🔄 Próximas Atualizações
+
+- **Múltiplos Cargos**: Implementação de votação para diferentes cargos eleitorais
+- **Autenticação de Eleitores**: Sistema de login para identificação dos votantes
+- **Geração de Relatórios**: Exportação de resultados em diferentes formatos
+- **Modo Administrador**: Interface para gerenciamento de candidatos e eleições
+- **Temas Personalizáveis**: Opções de customização visual da interface
 
 ## 📞 Contato
 
