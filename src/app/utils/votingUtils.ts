@@ -2,7 +2,7 @@
  * Utilitários para a lógica de votação
  */
 import { Candidate } from '../types/candidateTypes';
-import { Dispatch, SetStateAction, useState, useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { candidates } from './candidatesData';
 
 /**
@@ -41,43 +41,12 @@ export interface UrnaState {
 }
 
 /**
- * Interface para os setters de estado da urna
- */
-export interface UrnaStateSetters {
-  setNum1: Dispatch<SetStateAction<string>>;
-  setNum2: Dispatch<SetStateAction<string>>;
-  setVotedCandidate: Dispatch<SetStateAction<Candidate | null>>;
-  setVotingState: Dispatch<SetStateAction<VotingState>>;
-}
-
-/**
  * Formata os dados do candidato para exibição
  */
 export const formatCandidateInfo = (candidate: Candidate): string => {
   if (!candidate) return '';
   
   return `${candidate.name} - ${candidate.partido || ''}`;
-};
-
-/**
- * Processa o clique em um botão numérico e atualiza o estado
- * @param value - Valor do botão pressionado
- * @param state - Estado atual da urna
- * @param stateSetters - Funções para atualizar o estado
- * @param candidatesList - Lista de candidatos
- */
-export const handleNumericButtonClick = (
-  value: string,
-  state: UrnaState,
-  stateSetters: UrnaStateSetters,
-  candidatesList: Candidate[]
-): void => {
-  const { newNum1, newNum2, candidate } = processNumericButtonClick(value, state.num1, state.num2, candidatesList);
-  stateSetters.setNum1(newNum1);
-  stateSetters.setNum2(newNum2);
-  if (candidate) {
-    stateSetters.setVotedCandidate(candidate);
-  }
 };
 
 /**
@@ -116,14 +85,6 @@ export const processNumericButtonClick = (
  * Processa o voto em branco e atualiza o estado
  * @param stateSetters - Funções para atualizar o estado
  */
-export const handleWhiteVote = (stateSetters: UrnaStateSetters): void => {
-  const { num1, num2, votingState, candidate } = processWhiteVote();
-  stateSetters.setNum1(num1);
-  stateSetters.setNum2(num2);
-  stateSetters.setVotingState(votingState);
-  stateSetters.setVotedCandidate(candidate);
-};
-
 /**
  * Processa o voto em branco
  */
@@ -139,18 +100,6 @@ export const processWhiteVote = (): {
     votingState: 'blank',
     candidate: { name: 'Branco', image: '' }
   };
-};
-
-/**
- * Processa a correção do voto e atualiza o estado
- * @param stateSetters - Funções para atualizar o estado
- */
-export const handleCorrectVote = (stateSetters: UrnaStateSetters): void => {
-  const { num1, num2, votingState, candidate } = correctVote();
-  stateSetters.setNum1(num1);
-  stateSetters.setNum2(num2);
-  stateSetters.setVotingState(votingState);
-  stateSetters.setVotedCandidate(candidate);
 };
 
 /**
@@ -171,14 +120,6 @@ export const correctVote = (): {
 };
 
 /**
- * Confirma o voto e atualiza o estado
- * @param stateSetters - Funções para atualizar o estado
- */
-export const handleConfirmVote = (stateSetters: UrnaStateSetters): void => {
-  stateSetters.setVotingState('finished');
-};
-
-/**
  * Valores dos botões numéricos da urna
  */
 export const BUTTON_VALUES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
@@ -190,90 +131,81 @@ export const useVotingSystem = () => {
   const [num2, setNum2] = useState<string>('');
   const [votedCandidate, setVotedCandidate] = useState<Candidate | null>(null);
   const [votingState, setVotingState] = useState<VotingState>('ongoing');
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Função para lidar com o clique em botões numéricos
   const handleNumericButtonClick = useCallback((buttonValue: string) => {
-    // Se a votação já foi finalizada ou está em branco, não faz nada
-    if (votingState === 'finished' || votingState === 'blank') {
-      return;
-    }
+    if (votingState !== 'ongoing') return;
 
-    // Se o primeiro dígito ainda não foi preenchido
-    if (num1 === '') {
-      setNum1(buttonValue);
-      return;
-    }
+    const { newNum1, newNum2, candidate } = processNumericButtonClick(
+      buttonValue,
+      num1,
+      num2,
+      candidates
+    );
 
-    // Se o segundo dígito ainda não foi preenchido
-    if (num2 === '') {
-      setNum2(buttonValue);
-      
-      // Verifica se existe candidato com esse número
-      const candidateNumber = num1 + buttonValue;
-      const foundCandidate = candidates.find(c => c.numero === candidateNumber);
-      
-      if (foundCandidate) {
-        setVotedCandidate(foundCandidate);
-      } else {
-        // Candidato não encontrado
-        setVotedCandidate(null);
-      }
-    }
+    setNum1(newNum1);
+    setNum2(newNum2);
+    setVotedCandidate(candidate);
   }, [num1, num2, votingState]);
 
   // Função para lidar com voto em branco
   const handleWhiteVote = useCallback(() => {
-    // Se a votação já foi finalizada, não faz nada
-    if (votingState === 'finished') {
-      return;
+    if (votingState === 'finished') return;
+
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
     }
 
-    // Limpa os números e o candidato selecionado
-    setNum1('');
-    setNum2('');
-    setVotedCandidate(null);
-    setVotingState('blank');
+    const { num1, num2, votingState: nextState, candidate } = processWhiteVote();
+    setNum1(num1);
+    setNum2(num2);
+    setVotingState(nextState);
+    setVotedCandidate(candidate);
   }, [votingState]);
 
   // Função para corrigir o voto
   const handleCorrectVote = useCallback(() => {
-    // Se a votação já foi finalizada, não faz nada
-    if (votingState === 'finished') {
-      return;
+    if (votingState === 'finished') return;
+
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
     }
 
-    // Limpa os números e o candidato selecionado
-    setNum1('');
-    setNum2('');
-    setVotedCandidate(null);
-    setVotingState('ongoing');
+    const { num1, num2, votingState: nextState, candidate } = correctVote();
+    setNum1(num1);
+    setNum2(num2);
+    setVotingState(nextState);
+    setVotedCandidate(candidate);
   }, [votingState]);
 
   // Função para confirmar o voto
   const handleConfirmVote = useCallback(() => {
-    // Se a votação já foi finalizada, não faz nada
-    if (votingState === 'finished') {
-      return;
-    }
+    if (votingState === 'finished') return;
 
-    // Para confirmar o voto, deve ter um candidato selecionado ou estar em branco
-    if (votedCandidate || votingState === 'blank') {
-      // Aqui você poderia adicionar lógica para salvar o voto em algum lugar
-      // Por exemplo, enviar para um backend
-      
-      // Finaliza a votação
+    const hasTwoDigits = Boolean(num1 && num2);
+
+    // Confirma se:
+    // - voto em branco, OU
+    // - digitou 2 dígitos (candidato válido ou NULO)
+    if (votingState === 'blank' || hasTwoDigits) {
       setVotingState('finished');
-      
-      // Limpa os dados após um tempo
-      setTimeout(() => {
-        // Reset para uma nova votação
+
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+
+      resetTimerRef.current = setTimeout(() => {
         setNum1('');
         setNum2('');
         setVotedCandidate(null);
         setVotingState('ongoing');
+        resetTimerRef.current = null;
       }, 3000);
     }
-  }, [votedCandidate, votingState]);
+  }, [num1, num2, votingState]);
 
   return {
     // Estados

@@ -1,9 +1,7 @@
 import React from 'react';
 import { Container, Card, Form, Row, Col, Button } from 'react-bootstrap';
-import { 
-  useVotingSystem,
-  BUTTON_VALUES
-} from '../utils/votingUtils';
+import { useUrna } from '../hooks/useUrna';
+import { BUTTON_VALUES } from '../utils/votingUtils';
 import styles from '../styles/UrnaStyles.module.css';
 
 const Urna: React.FC = () => {
@@ -17,7 +15,7 @@ const Urna: React.FC = () => {
     handleWhiteVote,
     handleCorrectVote,
     handleConfirmVote
-  } = useVotingSystem();
+  } = useUrna();
 
   return (
     <Container className={`shadow-lg ${styles.urnaContainer}`}>     
@@ -37,14 +35,16 @@ const Urna: React.FC = () => {
                     </Col>
                   </Row>
                 </Form>
-                {votedCandidate && votedCandidate.image && votingState === 'ongoing' && (
+                {votedCandidate && votingState === 'ongoing' && (
                   <Row style={{ marginTop: '20px' }}>
                     <Col xs={6} lg={6} className="d-flex align-items-center justify-content-center">
-                      <img
-                        src={votedCandidate.image}
-                        className={styles.candidateImage}
-                        alt="candidato"
-                      />
+                      {votedCandidate.image ? (
+                        <img
+                          src={votedCandidate.image}
+                          className={styles.candidateImage}
+                          alt="candidato"
+                        />
+                      ) : null}
                     </Col>
                     <Col xs={6} lg={6}>
                       <div className={styles.candidateInfo}>

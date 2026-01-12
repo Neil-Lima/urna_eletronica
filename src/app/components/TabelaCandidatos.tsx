@@ -1,18 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Container, Table, Pagination } from 'react-bootstrap';
-import { candidates } from '../utils/candidatesData';
-import { getPaginatedCandidates, ITEMS_PER_PAGE } from '../utils/paginationUtils';
+import { useTabelaCandidatos } from '../hooks/useTabelaCandidatos';
 import styles from '../styles/TabelaCandidatos.module.css';
 
 const TabelaCandidatos: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Obter dados paginados dos utilitários
-  const { currentItems: currentCandidates, totalPages } = getPaginatedCandidates(candidates, currentPage);
-  
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
+  const { currentPage, currentCandidates, totalPages, handlePageChange } = useTabelaCandidatos();
 
   return (
     <Container className={`shadow ${styles.tableContainer}`}>
