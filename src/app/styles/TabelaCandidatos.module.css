@@ -1,0 +1,18 @@
+.tableContainer {
+  padding: 16px;
+}
+
+.tableHeader {
+  font-size: 20px;
+  background: var(--bs-gray-700);
+  color: var(--bs-gray-100);
+}
+
+.tableRow {
+  font-size: 20px;
+}
+
+.candidateImage {
+  width: 50px;
+  height: auto;
+} 
